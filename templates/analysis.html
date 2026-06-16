@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Performance Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="analysis-container">
+    <h2>Performance Analysis</h2>
+
+    <div class="card">
+        <p><strong>Class Average:</strong> {{ class_avg }}</p>
+        <p><strong>Topper:</strong> {{ topper }} ({{ highest }})</p>
+    </div>
+
+    <a href="/dashboard" class="back-btn">Back</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<div class="table-container">
+    <h2>Student Records</h2>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>M1</th>
+            <th>M2</th>
+            <th>M3</th>
+            <th>Avg</th>
+            <th>Grade</th>
+        </tr>
+
+        {% for s in students %}
+        <tr>
+            <td>{{s[0]}}</td>
+            <td>{{s[1]}}</td>
+            <td>{{s[2]}}</td>
+            <td>{{s[3]}}</td>
+            <td>{{s[4]}}</td>
+            <td>{{s[5]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a href="/dashboard" class="back-btn">Back</a>
+</div>
+</html>
