@@ -1,24 +1,59 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>STUDENT PERFORMANCE ANALYSER</title>
-    <title>Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<title>Login</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
 </head>
+
 <body>
-    <h1>STUDENT PERFORMANCE ANALYSER</h1>
+
 <div class="container">
-    <h2>Login</h2>
-    <form method="post">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
 
-        <button type="submit">Submit</button>
-    </form>
+<h1>Student Performance Analyzer</h1>
 
-    <a href="/register" class="register-btn">Register</a>
+<h2>Login</h2>
+
+<form method="POST">
+
+<input
+type="text"
+name="username"
+placeholder="Username"
+required>
+
+<input
+type="password"
+name="password"
+placeholder="Password"
+required>
+
+<button>
+
+Login
+
+</button>
+
+</form>
+
+<p>
+
+Don't have an account?
+
+<a href="/register">
+
+Register
+
+</a>
+
+</p>
+
 </div>
 
 </body>
+
 </html>

@@ -1,14 +1,62 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<div class="container">
-    <h2>Dashboard</h2>
+    <title>Dashboard</title>
 
-    <a href="/add">Add Student</a><br>
-    <a href="/view">View Students</a><br>
-    <a href="/analysis">Performance Analysis</a><br>
-    <a href="/bargraph">View Graph</a><br>
-    <a href="/logout" class="back-btn">Logout</a>
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<h1>Student Performance Analyzer</h1>
+
+<div class="cards">
+
+<div class="card">
+
+<h3>Total Students</h3>
+
+<h2>{{total}}</h2>
+
 </div>
+
+<div class="card">
+
+<h3>Class Average</h3>
+
+<h2>{{class_avg}}</h2>
+
+</div>
+
+<div class="card">
+
+<h3>Top Performer</h3>
+
+<h2>{{topper}}</h2>
+
+</div>
+
+</div>
+
+<div class="menu">
+
+<a href="/add">➕ Add Student</a>
+
+<a href="/view">📋 View Students</a>
+
+<a href="/analysis">📊 Performance</a>
+
+<a href="/bargraph">📈 Charts</a>
+
+<a href="/logout">🚪 Logout</a>
+
+</div>
+
+</div>
+
+</body>
+
 </html>

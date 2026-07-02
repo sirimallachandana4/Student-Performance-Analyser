@@ -1,32 +1,104 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<title>Students</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
 </head>
-<div class="table-container">
-    <h2>Student Records</h2>
 
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>M1</th>
-            <th>M2</th>
-            <th>M3</th>
-            <th>Avg</th>
-            <th>Grade</th>
-        </tr>
+<body>
 
-        {% for s in students %}
-        <tr>
-            <td>{{s[0]}}</td>
-            <td>{{s[1]}}</td>
-            <td>{{s[2]}}</td>
-            <td>{{s[3]}}</td>
-            <td>{{s[4]}}</td>
-            <td>{{s[5]}}</td>
-        </tr>
-        {% endfor %}
-    </table>
+<h1>Students</h1>
 
-    <a href="/dashboard" class="back-btn">Back</a>
-</div>
+<form action="/search">
+
+<input
+
+type="text"
+
+name="keyword"
+
+placeholder="Search Student">
+
+<button>
+
+Search
+
+</button>
+
+</form>
+
+<table>
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>M1</th>
+
+<th>M2</th>
+
+<th>M3</th>
+
+<th>Average</th>
+
+<th>Grade</th>
+
+<th>Delete</th>
+
+</tr>
+
+{% for s in students %}
+
+<tr>
+
+<td>{{s.id}}</td>
+
+<td>{{s.name}}</td>
+
+<td>{{s.m1}}</td>
+
+<td>{{s.m2}}</td>
+
+<td>{{s.m3}}</td>
+
+<td>{{s.average}}</td>
+
+<td>{{s.grade}}</td>
+
+<td>
+
+<a
+
+class="delete"
+
+href="/delete/{{s.id}}">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<br>
+
+<a href="/dashboard">
+
+Dashboard
+
+</a>
+
+</body>
+
 </html>

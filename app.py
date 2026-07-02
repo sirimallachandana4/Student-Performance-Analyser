@@ -1,207 +1,303 @@
+from flask import Flask, render_template, request, redirect, session
+from database import db, User, Student
 import matplotlib.pyplot as plt
 import os
-from flask import send_file
-import os
-
-if not os.path.exists("users.txt"):
-    open("users.txt", "w").close()
-
-if not os.path.exists("students.txt"):
-    open("students.txt", "w").close()
-
-from flask import Flask, render_template, request, redirect, session
 
 app = Flask(__name__)
-app.secret_key = "secret123"
+app.secret_key = "student123"
 
-# ----------- HELPER FUNCTION -----------
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
+
+
+# ----------------------------
+# Grade Calculator
+# ----------------------------
 def calculate_grade(avg):
     if avg >= 90:
-        return 'A'
+        return "A"
     elif avg >= 75:
-        return 'B'
+        return "B"
     elif avg >= 60:
-        return 'C'
+        return "C"
     elif avg >= 50:
-        return 'D'
+        return "D"
     else:
-        return 'F'
+        return "F"
 
-# ----------- HOME -----------
 
-@app.route('/')
+# ----------------------------
+# HOME
+# ----------------------------
+@app.route("/")
 def home():
-    return redirect('/login')
+    return redirect("/login")
 
-# ----------- REGISTER -----------
 
-@app.route('/register', methods=['GET', 'POST'])
+# ----------------------------
+# REGISTER
+# ----------------------------
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
 
-        with open("users.txt", "a") as f:
-            f.write(username + "," + password + "\n")
+    if request.method == "POST":
 
-        return redirect('/login')
+        username = request.form["username"]
+        password = request.form["password"]
 
-    return render_template('register.html')
+        user = User.query.filter_by(username=username).first()
 
-# ----------- LOGIN -----------
+        if user:
+            return "Username Already Exists"
 
-@app.route('/login', methods=['GET', 'POST'])
+        new_user = User(
+            username=username,
+            password=password
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect("/login")
+
+    return render_template("register.html")
+
+
+# ----------------------------
+# LOGIN
+# ----------------------------
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
 
-        with open("users.txt", "r") as f:
-            users = f.readlines()
+    if request.method == "POST":
 
-        for user in users:
-            u, p = user.strip().split(",")
-            if u == username and p == password:
-                session['user'] = username
-                return redirect('/dashboard')
+        username = request.form["username"]
+        password = request.form["password"]
+
+        user = User.query.filter_by(
+            username=username,
+            password=password
+        ).first()
+
+        if user:
+
+            session["user"] = username
+
+            return redirect("/dashboard")
 
         return "Invalid Credentials"
 
-    return render_template('login.html')
+    return render_template("login.html")
 
-# ----------- DASHBOARD -----------
 
-@app.route('/dashboard')
+# ----------------------------
+# LOGOUT
+# ----------------------------
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect("/login")
+
+# ----------------------------
+# DASHBOARD
+# ----------------------------
+@app.route("/dashboard")
 def dashboard():
-    if 'user' not in session:
-        return redirect('/login')
-    return render_template('dashboard.html')
 
-# ----------- ADD STUDENT -----------
+    if "user" not in session:
+        return redirect("/login")
 
-@app.route('/add', methods=['GET', 'POST'])
-def add_student():
-    if request.method == 'POST':
-        name = request.form['name']
-        m1 = int(request.form['m1'])
-        m2 = int(request.form['m2'])
-        m3 = int(request.form['m3'])
+    total = Student.query.count()
 
-        avg = (m1 + m2 + m3) / 3
-        grade = calculate_grade(avg)
+    students = Student.query.all()
 
-        with open("students.txt", "a") as f:
-            f.write(f"{name},{m1},{m2},{m3},{avg},{grade}\n")
-
-        return redirect('/view')
-
-    return render_template('add_student.html')
-
-# ----------- VIEW STUDENTS -----------
-
-@app.route('/view')
-def view_students():
-    students = []
-    try:
-        with open("students.txt", "r") as f:
-            for line in f:
-                students.append(line.strip().split(","))
-    except:
-        pass
-
-    return render_template('view_students.html', students=students)
-
-# ----------- PERFORMANCE -----------
-
-@app.route('/analysis')
-def analysis():
-    total = 0
-    count = 0
-    highest = -1
+    class_avg = 0
     topper = "No Data"
 
-    try:
-        with open("students.txt", "r") as f:
-            for line in f:
-                data = line.strip().split(",")
+    if total > 0:
 
-                if len(data) < 6:
-                    continue
+        class_avg = round(
+            sum(s.average for s in students) / total,
+            2
+        )
 
-                name, m1, m2, m3, avg, grade = data
-                avg = float(avg)
+        top = max(students, key=lambda x: x.average)
 
-                total += avg
-                count += 1
+        topper = top.name
 
-                if avg > highest:
-                    highest = avg
-                    topper = name
+    return render_template(
+        "dashboard.html",
+        total=total,
+        class_avg=class_avg,
+        topper=topper
+    )
 
-        class_avg = round(total / count, 2) if count > 0 else 0
 
-    except:
-        class_avg = 0
+# ----------------------------
+# ADD STUDENT
+# ----------------------------
+@app.route("/add", methods=["GET", "POST"])
+def add_student():
+
+    if request.method == "POST":
+
+        name = request.form["name"]
+
+        m1 = int(request.form["m1"])
+
+        m2 = int(request.form["m2"])
+
+        m3 = int(request.form["m3"])
+
+        avg = round((m1 + m2 + m3) / 3, 2)
+
+        grade = calculate_grade(avg)
+
+        student = Student(
+            name=name,
+            m1=m1,
+            m2=m2,
+            m3=m3,
+            average=avg,
+            grade=grade
+        )
+
+        db.session.add(student)
+
+        db.session.commit()
+
+        return redirect("/view")
+
+    return render_template("add_student.html")
+
+
+# ----------------------------
+# VIEW STUDENTS
+# ----------------------------
+@app.route("/view")
+def view_students():
+
+    students = Student.query.all()
+
+    return render_template(
+        "view_students.html",
+        students=students
+    )
+
+
+# ----------------------------
+# SEARCH
+# ----------------------------
+@app.route("/search")
+def search():
+
+    keyword = request.args.get("keyword", "")
+
+    students = Student.query.filter(
+        Student.name.contains(keyword)
+    ).all()
+
+    return render_template(
+        "view_students.html",
+        students=students
+    )
+
+
+# ----------------------------
+# DELETE
+# ----------------------------
+@app.route("/delete/<int:id>")
+def delete_student(id):
+
+    student = Student.query.get(id)
+
+    if student:
+
+        db.session.delete(student)
+
+        db.session.commit()
+
+    return redirect("/view")
+
+
+# ----------------------------
+# ANALYSIS
+# ----------------------------
+@app.route("/analysis")
+def analysis():
+
+    students = Student.query.all()
+
+    if len(students) == 0:
+
+        return render_template(
+            "analysis.html",
+            class_avg=0,
+            topper="No Data",
+            highest=0
+        )
+
+    total = sum(s.average for s in students)
+
+    class_avg = round(total / len(students), 2)
+
+    top = max(students, key=lambda x: x.average)
 
     return render_template(
         "analysis.html",
         class_avg=class_avg,
-        topper=topper,
-        highest=highest
+        topper=top.name,
+        highest=top.average
     )
 
 
-@app.route('/bargraph')
+# ----------------------------
+# BAR GRAPH
+# ----------------------------
+@app.route("/bargraph")
 def bargraph():
-    names = []
-    averages = []
 
-    try:
-        with open("students.txt", "r") as f:
-            for line in f:
-                data = line.strip().split(",")
+    students = Student.query.all()
 
-                if len(data) < 6:
-                    continue
+    if len(students) == 0:
 
-                names.append(data[0])          # student name
-                averages.append(float(data[4]))  # average marks
+        return "No Student Data"
 
-        if len(names) == 0:
-            return "<h3>No data available</h3>"
+    names = [s.name for s in students]
 
-        # Create bar graph
-        plt.figure()
-        plt.bar(names, averages)
-        plt.xlabel("Students")
-        plt.ylabel("Average Marks")
-        plt.title("Student Performance Bar Graph")
+    averages = [s.average for s in students]
 
-        # Create static folder if not exists
-        if not os.path.exists("static"):
-            os.makedirs("static")
+    plt.figure(figsize=(8,5))
 
-        # Save image
-        file_path = "static/bargraph.png"
-        plt.savefig(file_path)
-        plt.close()
+    plt.bar(names, averages, color="royalblue")
 
-        return f"""
-        <h2>Bar Graph</h2>
-        <img src="/{file_path}" alt="Bar Graph">
-        <br><a href='/dashboard'>Back</a>
-        """
+    plt.xlabel("Students")
 
-    except Exception as e:
-        return f"<h3>Error: {str(e)}</h3>"
-# ----------- LOGOUT -----------
+    plt.ylabel("Average")
 
-@app.route('/logout')
-def logout():
-    session.pop('user', None)
-    return redirect('/login')
-# ----------- RUN -----------
+    plt.title("Student Performance")
 
-if __name__ == '__main__':
+    if not os.path.exists("static/images"):
+
+        os.makedirs("static/images")
+
+    plt.savefig("static/images/bargraph.png")
+
+    plt.close()
+
+    return render_template("graph.html")
+
+
+# ----------------------------
+# RUN
+# ----------------------------
+if __name__ == "__main__":
+
     app.run(debug=True)

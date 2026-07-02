@@ -1,21 +1,67 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Performance Analysis</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<title>Performance Analysis</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
 </head>
+
 <body>
 
 <div class="analysis-container">
-    <h2>Performance Analysis</h2>
 
-    <div class="card">
-        <p><strong>Class Average:</strong> {{ class_avg }}</p>
-        <p><strong>Topper:</strong> {{ topper }} ({{ highest }})</p>
-    </div>
+<h1>Performance Report</h1>
 
-    <a href="/dashboard" class="back-btn">Back</a>
+<div class="cards">
+
+<div class="card">
+
+<h3>Class Average</h3>
+
+<h2>{{class_avg}}</h2>
+
+</div>
+
+<div class="card">
+
+<h3>Top Performer</h3>
+
+<h2>{{topper}}</h2>
+
+</div>
+
+<div class="card">
+
+<h3>Highest Marks</h3>
+
+<h2>{{highest}}</h2>
+
+</div>
+
+</div>
+
+<br>
+
+<a href="/bargraph">
+
+View Graph
+
+</a>
+
+<br><br>
+
+<a href="/dashboard">
+
+Dashboard
+
+</a>
+
 </div>
 
 </body>
+
 </html>

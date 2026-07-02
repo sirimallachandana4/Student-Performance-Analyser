@@ -1,19 +1,65 @@
+<!DOCTYPE html>
 <html>
+
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<title>Add Student</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
 </head>
+
+<body>
+
 <div class="form-container">
-    <h2>Add Student</h2>
 
-    <form method="post">
-        <input type="text" name="name" placeholder="Enter Name" required><br>
-        <input type="number" name="m1" placeholder="Marks 1" required><br>
-        <input type="number" name="m2" placeholder="Marks 2" required><br>
-        <input type="number" name="m3" placeholder="Marks 3" required><br>
+<h1>Add Student</h1>
 
-        <button type="submit">Add Student</button>
-    </form>
+<form method="POST">
 
-    <a href="/dashboard" class="back-btn">Back</a>
+<input
+type="text"
+name="name"
+placeholder="Student Name"
+required>
+
+<input
+type="number"
+name="m1"
+placeholder="Math Marks"
+required>
+
+<input
+type="number"
+name="m2"
+placeholder="Science Marks"
+required>
+
+<input
+type="number"
+name="m3"
+placeholder="English Marks"
+required>
+
+<button type="submit">
+
+Add Student
+
+</button>
+
+</form>
+
+<br>
+
+<a href="/dashboard">
+
+Back
+
+</a>
+
 </div>
+
+</body>
+
 </html>
