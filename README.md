@@ -48,14 +48,21 @@ Student-Performance-Analyzer/
 
 ## Screenshots
 
-Add screenshots of:
 
 - Login Page
+  https://1drv.ms/i/c/2f140be3f85d5316/IQBJ8Lh0m6lEQ5kbMsCDgS7qARZHJvhbnrzG-HgODCQNuEo?e=AssRyg
+- Register page
+  https://1drv.ms/i/c/2f140be3f85d5316/IQBJ8Lh0m6lEQ5kbMsCDgS7qARZHJvhbnrzG-HgODCQNuEo?e=AssRyg
 - Dashboard
+  https://1drv.ms/i/c/2f140be3f85d5316/IQBJ8Lh0m6lEQ5kbMsCDgS7qARZHJvhbnrzG-HgODCQNuEo?e=AssRyg
 - Add Student
+  https://1drv.ms/i/c/2f140be3f85d5316/IQBJ8Lh0m6lEQ5kbMsCDgS7qARZHJvhbnrzG-HgODCQNuEo?e=AssRyg
 - Student List
+  https://1drv.ms/i/c/2f140be3f85d5316/IQBJ8Lh0m6lEQ5kbMsCDgS7qARZHJvhbnrzG-HgODCQNuEo?e=AssRyg
 - Performance Analysis
+  https://1drv.ms/i/c/2f140be3f85d5316/IQCzRjKMLYZlSqPb5SUveJPHAQWY1Fsd_A6hF5jcxjRjZ1g?e=wceOQK
 - Bar Graph
+  https://1drv.ms/i/c/2f140be3f85d5316/IQBc1umt8KdIRLVySD0fYUnOAQPl6Ph1TrMeYfYBp8yJzTc?e=juTsHD
 
 ---
 
